@@ -4,7 +4,10 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const authRouter = require("./routes/auth-routes");
-const { requireAuth } = require("./middleware/auth-middleware");
+const {
+  requireAuth,
+  checkCurrentUser,
+} = require("./middleware/auth-middleware");
 
 const app = express();
 
@@ -27,6 +30,7 @@ mongoose
   .catch((err) => console.log(err));
 
 // routes
+app.get("*", checkCurrentUser);
 app.get("/", (req, res) => res.render("home"));
 app.get("/smoothies", requireAuth, (req, res) => res.render("smoothies"));
 app.use(authRouter);
